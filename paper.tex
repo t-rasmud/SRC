@@ -1,0 +1,84 @@
+\documentclass[conference]{IEEEtran}
+%\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\usepackage{proof}
+\usepackage{amsmath,amssymb,amsthm,textcomp}
+
+\usepackage{booktabs}   %% For formal tables:
+%% http://ctan.org/pkg/booktabs
+\usepackage{wrapfig}
+\usepackage{subcaption} %% For complex figures with subfigures/subcaptions
+%% http://ctan.org/pkg/subcaption
+
+\usepackage{url}
+\usepackage{xspace}
+\usepackage{flushend}
+
+\usepackage{fancyvrb}
+\fvset{fontsize=\smaller}
+
+\usepackage{color}
+
+\usepackage{hyperref}
+\usepackage{cleveref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\input{macros.tex}
+
+\begin{document}
+
+\title{Verifying Determinism Properties in Sequential Programs}
+
+\author{\IEEEauthorblockN{Rashmi Mudduluru}
+\IEEEauthorblockA{\textit{Paul G. Allen School of Computer Science and Engineering} \\
+\textit{University of Washington}\\
+Seattle, USA \\
+rashmi4@cs.washington.edu}
+}
+
+\maketitle
+
+\begin{abstract}
+When a program is nondeterministic, it is difficult to test and debug.
+Nondeterminism occurs even in sequential programs: for example, as a
+result of iterating over the elements of a hash table. This seemingly innocuous and
+frequently used operation can result in diverging test results
+if the test depends on iteration order for asserting correctness.
+
+We propose to create a type system that can express determinism specifications
+in a program.
+The key ideas in the type system are type qualifiers for nondeterminism,
+order-nondeterminism, and determinism; While state-of-the-art
+nondeterminism detection tools rely on observing runtime output, our approach
+aims to verify determinism at compile time, thereby providing stronger soundness guarantees.
+
+We implemented our type system for Java.
+Our type checker, \theDeterminismChecker, warns if a
+program is nondeterministic or verifies that the program is deterministic.
+In a case study of a 24,000-line software project, it found
+previously-unknown nondeterminism errors in a program that had been heavily
+vetted by its developers,
+who were greatly concerned about nondeterminism errors.
+\end{abstract}
+
+\begin{IEEEkeywords}
+nondeterminism, type system, verification, specification
+\end{IEEEkeywords}
+
+\input{introduction.tex}
+\input{related.tex}
+\input{approach.tex}
+\input{results.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{paper,bibstring-unabbrev,ernst,testing,types,crossrefs}
+
+\end{document}

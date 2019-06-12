@@ -1,0 +1,54 @@
+\section{Evaluation\label{sec:results}}
+To evaluate the usability of \theDeterminismChecker,
+we applied it to the Randoop test
+generator~\ifanonymous\citepalias{randoop-tool}\else\cite{PachecoLEB2007}\fi.
+We also wrote specifications for libraries Randoop uses, such as the JDK,
+JUnit, plume-util, and others.
+
+Randoop is intended to be deterministic, when invoked on a deterministic
+program~\cite{randoop-manual}.\footnote{Users of Randoop can pass in a different seed in order to
+    obtain a different deterministic output.  Randoop has command-line
+    options that enable concurrency and timeouts, both of which can lead to
+    nondeterministic behavior.}
+However, Randoop was not deterministic.  This caused the developers
+problems in 
+reproducing bugs reported by users, 
+reproducing test failures during development, and
+understanding the effect of changes to Randoop by comparing executions of two
+similar variants of Randoop.
+
+In brief, we wrote type qualifiers in the Randoop source code to express its
+determinism specification,
+then ran
+\theDeterminismChecker.  Each warning indicated a mismatch between the
+specification and the implementation.  We addressed each warning by changing our
+specification, reporting a bug in Randoop, or suppressing a false positive warning.
+
+TheDeterminismChecker found \numRandoopBugs previously-unknown nondeterminism bugs in Randoop.
+The Randoop developers accepted our bug reports and committed fixes to the repository. An example
+of a severe bugs follows, according to the Randoop developers' categorization:
+
+\begin{itemize}
+    \item
+    \textbf{HashSet bug}: One use of \<HashSet> could cause a problem if a type variable's lower or upper
+    bound in the code Randoop is run on has a type parameter that the type variable itself does not have.
+    This situation does occur, even in Randoop's test suite.
+    The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
+    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
+    \TheDeterminismChecker confirmed that 
+    25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.
+\end{itemize}
+
+\section{Research Contributions\label{sec:contributions}}
+This paper makes the following contributions:
+\begin{enumerate}
+  \item We designed a type system for expressing determinism properties.
+
+  \item We implemented the analysis, as a pluggable type system for Java, in a
+    tool called \theDeterminismChecker.
+
+  \item In a case study, we ran our analysis on a 24 KLOC project that
+    developers had already spent weeks of testing and inspection effort to
+    make deterministic.  \TheDeterminismChecker
+    discovered 5 instances of nondeterminism that the developers had
+    overlooked.

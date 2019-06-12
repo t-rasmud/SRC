@@ -1,0 +1,76 @@
+\section{Introduction\label{sec:introduction}}
+
+A nondeterministic program may produce different output on different runs
+when provided with the same input and is a serious problem for software developers and users.
+\begin{itemize}
+\item
+  Nondeterminism makes a program difficult to \textbf{test}, because test
+  oracles must account for all possible behaviors while still enforcing
+  correct behaviors~\cite{LuoHEM2014,ShiGLM2016,BellLHEYM2018,Sudarshan}.
+\item
+  Nondeterminism makes it difficult to \textbf{compare} two runs of a
+  program on different data, or to compare a run of a slightly modified
+  program to an original program.  This hinders debugging and maintenance,
+  and prevents use of techniques such as Delta Debugging~\cite{Zeller1999,YuLCZ2012}.
+\end{itemize}
+
+Two well-known sources of nondeterminism are concurrency
+and coin-flipping
+(calls to a \<random> API\@).
+It may be surprising that nondeterminism is common even in sequential
+programs that do not flip coins.
+For example, a program that iterates over a hash table
+may produce different output on different runs.
+So may any program that uses default formatting, such as Java's
+\<Object.toString()>, which includes a memory address.
+Other nondeterministic APIs include date-and-time functions and
+accessing system properties such as the file system or environment variables.
+
+We have created an analysis that detects nondeterminism or verifies its
+absence in sequential programs.
+Our analysis permits a programmer to specify which parts of their program
+are intentionally nondeterministic, and it verifies that the remainder is deterministic.
+Our analysis works at compile time, giving a guarantee over every possible
+execution of the program, unlike unsound dynamic tools that attempt
+to discover when a program has exhibited nondeterministic behavior on a
+specific run.  
+Our analysis handles collections that will contain the same values, but
+possibly in a different order, on different runs.
+Our analysis permits calls to
+nondeterministic APIs, and only issues a warning if they are used in ways
+that may lead to nondeterministic output observed by a user.  Like any
+sound analysis, it can issue false positive warnings.
+
+The high-level goal of our work is to provide programmers with a tool for
+specifying deterministic properties in a program and verifying them
+statically.
+
+\begin{figure*}
+
+\noindent
+In \<TypeVariable.java>:
+
+\begin{Verbatim}
+160:   public List<TypeVariable> getTypeParameters() {
+161:-    Set<TypeVariable> parameters = new HashSet<>(super.getTypeParameters());
+161:+    Set<TypeVariable> parameters = new LinkedHashSet<>(super.getTypeParameters());
+162:     parameters.add(this);
+163:     return new ArrayList<>(parameters);
+164:   }
+\end{Verbatim}
+
+\caption{Fixes made by the Randoop developers in response to our bug report
+  about improper use of a HashSet.  Lines starting with ``\<->'' were
+ removed and those starting with ``\<+>'' were added.
+ Our tool, \theDeterminismChecker, confirmed that 
+25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.}
+\label{fig:randoop-bug-hashset}
+\end{figure*}
+
+\end{enumerate}
+
+%\todo{It is essential that the introduction includes an example real-world
+%  defect that \theDeterminismChecker found.}
+
+
+% LocalWords:  NonDex DeFlaker Det OrderNonDet NonDet

@@ -1,0 +1,90 @@
+%%% Todo comments
+
+%% Comment out one of these two definitions.
+\newcommand{\todo}[1]{\relax}
+% \newcommand{\todo}[1]{{\color{red}\bfseries [[#1]]}}
+
+% Don't show todo commands if this macro is defined.
+\ifdefined\notodocomments
+  \renewcommand{\todo}[1]{\relax}
+\fi
+
+\newcommand{\ourTypeSystem}{our type system\xspace}
+\newcommand{\OurTypeSystem}{Our type system\xspace}
+\newcommand{\theDeterminismChecker}{the Determinism Checker\xspace}
+\newcommand{\TheDeterminismChecker}{The Determinism Checker\xspace}
+\newcommand{\theDeterminismCheckerImplementation}{\theDeterminismChecker implementation\xspace}
+\newcommand{\TheDeterminismCheckerImplementation}{\TheDeterminismChecker implementation\xspace}
+
+% A commit hash
+% \newcommand{\commit}[1]{\ifanonymous{ (commit #1)}\else\fi}
+
+%%% Types and type rules
+
+% These are for use in text.  They permit line breaks.
+% You need to use an explicit space after them, when \<SomeType> follows.
+\newcommand{\Det}{\text{\<Det>}\xspace}
+\newcommand{\OrderNonDet}{\text{\<Order>\-\<Non>\-\<Det>}\xspace}
+\newcommand{\NonDet}{\text{\<Non>\-\<Det>}\xspace}
+\newcommand{\Ond}{\OrderNonDet}
+\newcommand{\aDet}{\text{\<@Det>}\xspace}
+\newcommand{\aOrderNonDet}{\text{\<@Order>\-\<Non>\-\<Det>}\xspace}
+\newcommand{\aNonDet}{\text{\<@Non>\-\<Det>}\xspace}
+\newcommand{\aOnd}{\aOrderNonDet}
+
+\newcommand{\up}[1]{\ifmmode #1\mathord{\uparrow} \else #1$\uparrow$\fi}
+\newcommand{\down}[1]{\ifmmode #1\mathord{\downarrow} \else #1$\downarrow$\fi}
+\newcommand{\use}[1]{\|use|(#1)}
+
+\newcommand{\PolyDetUp}{\<PolyDet$\uparrow$>}
+\newcommand{\PolyDetDown}{\<PolyDet$\downarrow$>}
+
+\newcommand{\rulename}[1]{\textsc{#1}}
+
+\newcommand{\wellformed}[1]{\vdash : #1}
+
+% Polymorphic type
+\newcommand{\forallt}[1]{\ensuremath{\forall #1 . \ }}
+
+
+%%% Common types
+\newcommand{\CollectionE}{\mbox{\<Collection>\angles{$\tau_e$}}}
+\newcommand{\CollectionKB}{\mbox{\<Collection>\angles{$\kappa_e\ \beta_e$}}}
+\newcommand{\ListE}{\mbox{\<List>\angles{$\tau_e$}}}
+\newcommand{\ListKB}{\mbox{\<List>\angles{$\kappa_e\ \beta_e$}}}
+
+
+%%% Code formatting
+
+% \|name| or \mathid{name} denotes identifiers and slots in formulas
+\def\|#1|{\mathid{#1}}
+\newcommand{\mathid}[1]{\ensuremath{\mathit{#1}}}
+% \<name> or \codeid{name} denotes computer code identifiers
+\def\<#1>{\codeid{#1}}
+\protected\def\codeid#1{\ifmmode{\mbox{\sf{#1}}}\else{\sf #1}\fi}
+\protected\def\codeid#1{\ifmmode{\mbox{\ttfamily{#1}}}\else{\ttfamily #1}\fi}
+\protected\def\codeid#1{\ifmmode{\mbox{\smaller\ttfamily{#1}}}\else{\smaller\ttfamily #1}\fi}
+
+% Enclosed in angle brackets
+\newcommand{\angles}[1]{\ensuremath{\langle}#1\ensuremath{\rangle}}
+% A parameterized type
+\newcommand{\ptype}[2]{\<#1>\ensuremath{\langle}\<#2>\ensuremath{\rangle}}
+% A larger (in font size) parameterized type
+\newcommand{\lptype}[2]{{\larger\<#1>\ensuremath{\langle}\<#2>\ensuremath{\rangle}}}
+
+\newcommand{\myurl}[1]{\ifanonymous (URL elided)\else\url{#1}\fi}
+
+
+%%% Citations
+
+%\defcitealias{randoop-tool}{Randoop}
+
+
+%%% Data
+
+\newcommand{\numRandoopBugs}{5\xspace}
+\newcommand{\bugHashSet}{\textbf{HashSet bug}}
+\newcommand{\bugClasspath}{\textbf{Classpath bug}\xspace}
+\newcommand{\bugHashcodeOutput}{\textbf{Hash code output bug}\xspace}
+\newcommand{\bugTimestampOutput}{\textbf{Timestamp output bug}\xspace}
+\newcommand{\bugHashMapOutput}{\textbf{HashMap output bug}\xspace}
