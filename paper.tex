@@ -52,15 +52,14 @@ rashmi4@cs.washington.edu}
 When a program is nondeterministic, it is difficult to test and debug.
 Nondeterminism occurs even in sequential programs: for example, as a
 result of iterating over the elements of a hash table. This seemingly innocuous and
-frequently used operation can result in diverging test results
-if the test depends on iteration order for asserting correctness.
+frequently used operation can result in diverging test results.
 
-We propose to create a type system that can express determinism specifications
+We have created a type system that can express determinism specifications
 in a program.
 The key ideas in the type system are type qualifiers for nondeterminism,
-order-nondeterminism, and determinism; While state-of-the-art
-nondeterminism detection tools rely on observing runtime output, our approach
-aims to verify determinism at compile time, thereby providing stronger soundness guarantees.
+order-nondeterminism, and determinism. While state-of-the-art
+nondeterminism detection tools unsoundly rely on observing runtime output, our approach
+verifies determinism at compile time, thereby providing stronger soundness guarantees.
 
 We implemented our type system for Java.
 Our type checker, \theDeterminismChecker, warns if a
