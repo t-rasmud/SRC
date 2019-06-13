@@ -2,9 +2,6 @@
 To evaluate the usability of \theDeterminismChecker,
 we applied it to the Randoop test
 generator~\cite{PachecoLEB2007}.
-We also wrote specifications for libraries Randoop uses, such as the JDK,
-JUnit, plume-util, and others.
-
 Randoop is intended to be deterministic, when invoked on a deterministic
 program~\cite{randoop-manual}.\footnote{Users of Randoop can pass in a different seed in order to
     obtain a different deterministic output.  Randoop has command-line
@@ -17,9 +14,11 @@ reproducing test failures during development, and
 understanding the effect of changes to Randoop by comparing executions of two
 similar variants of Randoop.
 
-In brief, we wrote type qualifiers in the Randoop source code to express its
-determinism specification,
-then ran
+We first wrote specifications for libraries Randoop uses, such as the JDK,
+JUnit, and plume-util.
+Then, we wrote type qualifiers in the Randoop source code to express its
+determinism specification.
+Finally, we ran
 \theDeterminismChecker.  Each warning indicated a mismatch between the
 specification and the implementation.  We addressed each warning by changing our
 specification, reporting a bug in Randoop, or suppressing a false positive warning.
@@ -30,8 +29,8 @@ of a severe bugs follows, according to the Randoop developers' categorization:
 
 \begin{itemize}
     \item
-    \textbf{HashSet bug}: One use of \<HashSet> could cause a problem if a type variable's lower or upper
-    bound in the code Randoop is run on has a type parameter that the type variable itself does not have.
+    \textbf{HashSet bug}: Suppose that in the code under test, a type variable's lower or upper
+    bound has a type parameter that the type variable itself does not have. Then Randoop is nondeterministic
     This situation does occur, even in Randoop's test suite.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
     (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
