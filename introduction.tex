@@ -1,7 +1,7 @@
 \section{Introduction\label{sec:introduction}}
 
 A nondeterministic program may produce different output on different runs
-when provided with the same input and is a serious problem for software developers and users.
+when provided with the same input. This is a serious problem for software developers and users.
 \begin{itemize}
 \item
   Nondeterminism makes a program difficult to \textbf{test}, because test
@@ -26,6 +26,10 @@ So may any program that uses default formatting, such as Java's
 Other nondeterministic APIs include date-and-time functions and
 accessing system properties such as the file system or environment variables.
 
+The high-level goal of our work is to provide programmers with a tool for
+specifying deterministic properties in a program and verifying them
+statically.
+
 We have created an analysis that detects nondeterminism or verifies its
 absence in sequential programs.
 Our analysis permits a programmer to specify which parts of their program
@@ -40,10 +44,6 @@ Our analysis permits calls to
 nondeterministic APIs, and only issues a warning if they are used in ways
 that may lead to nondeterministic output observed by a user.  Like any
 sound analysis, it can issue false positive warnings.
-
-The high-level goal of our work is to provide programmers with a tool for
-specifying deterministic properties in a program and verifying them
-statically.
 
 \begin{figure*}
 
