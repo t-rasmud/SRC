@@ -3,7 +3,7 @@
 all: bib-update paper.pdf
 
 paper.pdf: paper.tex
-	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make paper.tex
+	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" paper.tex
 
 paper-notodos.pdf: paper.pdf
 	pdflatex "\def\notodocomments{}\input{paper}"
