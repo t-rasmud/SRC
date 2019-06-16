@@ -24,8 +24,8 @@ specification and the implementation.  We addressed each warning by changing our
 specification, reporting a bug in Randoop, or suppressing a false positive warning.
 
 \TheDeterminismChecker found \numRandoopBugs previously-unknown nondeterminism bugs in Randoop.
-The Randoop developers accepted our bug reports and committed fixes to the repository. An example
-of a severe bug follows, according to the Randoop developers' categorization:
+The Randoop developers accepted our bug reports and committed fixes to the repository. Examples
+of severe bugs follow, according to the Randoop developers' categorization:
 
 \begin{itemize}
     \item
@@ -36,6 +36,16 @@ of a severe bug follows, according to the Randoop developers' categorization:
     (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
     \TheDeterminismChecker confirmed that 
     25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.
+    \item
+    \textbf{Classpath bug}
+    Randoop used the CLASSPATH environment variable in preference to the
+    classpath passed on the command line.
+    This can cause incorrect behavior, both in Randoop's test suite and in the field,
+    if a user sets the environment variable.
+    The developers fixed the problem by changing Randoop to not read the environment variable
+    (commit 330e3c56).
+    \TheDeterminismChecker verified that all other uses of system and Java
+    properties did not lead to nondeterministic behavior.
 \end{itemize}
 
 \section{Research Contributions\label{sec:contributions}}
