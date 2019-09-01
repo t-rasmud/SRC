@@ -1,0 +1,76 @@
+SUBMISSION: 4
+TITLE: Verifying Determinism in Sequential Programs
+
+
+----------------------- REVIEW 1 ---------------------
+SUBMISSION: 4
+TITLE: Verifying Determinism in Sequential Programs
+AUTHORS: Rashmi Mudduluru
+
+----------- Overall evaluation -----------
+Sequential programs also contain nondeterminism, and such nondeterminism may bring difficulties in testing and debugging. To address this problem, this paper presents a type system to describe expressing determinism properties, and implemented a pluggable type system in Determinism Checker. Finally, this paper applies the Determinism Checker to Randoop and reveals 5 previously-unknown nodeterminism bugs. 
+
+This paper targets at an important problem, nondeterminism in sequential programs. In particular, this paper addresses this problem by defining a type system. However, how the type system solves the nondeterministic problem is not fully explained. For example, whether this type system can solve all the nondeterminism is not clear at all. The ability of this type system over the existing work (introduced in Section II) is not clear as well.
+
+To sum up,
++ This paper targets at an important problem.
++ This paper presents a clean solution (i.e., a type system).
++ This paper presents a case study to show the effectiveness of Determinism Checker.
+- It is not clear to what extent the proposed approach solves the problem.
+
+
+
+----------------------- REVIEW 2 ---------------------
+SUBMISSION: 4
+TITLE: Verifying Determinism in Sequential Programs
+AUTHORS: Rashmi Mudduluru
+
+----------- Overall evaluation -----------
+The paper proposes a type system that can express determinism
+specifications in a program. The proposed system verifies determinism
+at compile time and can provide stronger guarantees compared to prior
+work relying on runtime outputs. The proposed type system has been
+implemented for Java and has found previously unknown nondeterminism
+bugs in a real-world program.
+
+Strengths:
+
+- This paper targets the important problem of determinism checking.
+
+- The proposed type system seems promising and has detected determinism issues for Randoop.
+
+Weaknesses:
+
+- The process of the type system needs to be further described, and it
+  is not clear how the type system can detect determinism issues from
+  this version. For example, how are the specifications and type
+  qualifiers checked against each other?
+
+- The manual efforts involved for writing the type qualifiers and
+  specifications should be further analyzed. It would be better if the
+  paper can include a non-trivial example showing that the proposed
+  type system can help detect a bug that otherwise can be hard to
+  detect manually.
+
+
+
+----------------------- REVIEW 3 ---------------------
+SUBMISSION: 4
+TITLE: Verifying Determinism in Sequential Programs
+AUTHORS: Rashmi Mudduluru
+
+----------- Overall evaluation -----------
+The paper describes a compile-time approach to detect nondeterminism (or its absence) in sequential programs by designing a pluggable type system for Java. The paper puts an emphasis on collections that may contain the same values, but potentially in a different order on different executions of the program. The analysis is evaluated on the Randoop test generator. The evaluation section presents a HashSet and Classpath bug.
+
++ Important problem is being addressed
+- Some details on the type system could be added
+- Effort of tagging code unclear
+
+The paper tackles an important problem of verifying whether sequential programs exhibit nondeterministic behavior.
+It is generally well-written, also motivates the problem well, and presents a convincing case study.
+
+There are two main points where I see the need for more elaboration/improved presentation:
+(1) While the paper talks about a pluggable type system and briefly describes a typing hierarchy, the explanation it gives stays on a very high level Providing more details on the type system could make its inner workings a bit clearer.
+
+(2) It is implicitly mentioned in the paper that it requires some developers to specify parts of their code that are intentionally nondeterministic. However, it is a bit unclear how this specification (or tagging/labeling) would look like. This makes it tough to judge the effort involved in applying the proposed analysis. A more explicit example of how this specification may look like could help here.
+
