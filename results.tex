@@ -4,9 +4,11 @@ we applied it to the Randoop test
 generator~\cite{PachecoLEB2007}.
 Randoop is intended to be deterministic, when invoked on a deterministic
 program~\cite{randoop-manual}.\footnote{Users of Randoop can pass in a different seed in order to
-    obtain a different deterministic output.  Randoop has command-line
-    options that enable concurrency and timeouts, both of which can lead to
-    nondeterministic behavior.}
+    obtain a different deterministic output.  
+%    Randoop has command-line
+%    options that enable concurrency and timeouts, both of which can lead to
+%    nondeterministic behavior.
+}
 However, Randoop was not deterministic.  This caused the developers
 problems in 
 reproducing bugs reported by users, 
@@ -23,9 +25,13 @@ Finally, we ran
 specification and the implementation.  We addressed each warning by changing our
 specification, reporting a bug in Randoop, or suppressing a false positive warning.
 
-\TheDeterminismChecker found \numRandoopBugs previously-unknown nondeterminism bugs in Randoop.
-The Randoop developers accepted our bug reports and committed fixes to the repository. Examples
-of severe bugs follow, according to the Randoop developers' categorization:
+\TheDeterminismChecker found \numRandoopBugs previously-unknown nondeterminism bugs in Randoop that the developers couldn't detect even after they
+spent two weeks of full-time work to
+eliminate unintentional nondeterministic behavior by repeatedly
+running Randoop with verbose logging enabled and
+looking for differences in logging output (personal communication, 2019).
+They accepted our bug reports and committed fixes to the repository. Examples
+of severe bugs follow:
 
 \begin{itemize}
     \item
@@ -33,9 +39,13 @@ of severe bugs follow, according to the Randoop developers' categorization:
     bound has a type parameter that the type variable itself does not have. Then Randoop is nondeterministic.
     This situation does occur, even in Randoop's test suite.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
-    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
-    \TheDeterminismChecker confirmed that 
-    25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.
+    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}). 
+    \TheDeterminismChecker could detect this bug by assigning the type qualifier \<OrderNonDet>
+    to the newly created \<HashSet> (\<parameters>) on line 161. The function returns an \<ArrayList> which get the determinism type \<Det>. Creating a \<Det ArrayList> with 
+    \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
+    
+%    \TheDeterminismChecker confirmed that 
+%    25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.
     \item
     \textbf{Classpath bug}
     Randoop used the CLASSPATH environment variable in preference to the
@@ -44,22 +54,31 @@ of severe bugs follow, according to the Randoop developers' categorization:
     if a user sets the environment variable.
     The developers fixed the problem by changing Randoop to not read the environment variable
     (commit 330e3c56).
-    \TheDeterminismChecker verified that all other uses of system and Java
-    properties did not lead to nondeterministic behavior.
+%    \TheDeterminismChecker verified that all other uses of system and Java
+%    properties did not lead to nondeterministic behavior.
 \end{itemize}
 
+\TheDeterminismChecker adds default type qualifiers to any unannotated type reducing the programmer's annotation burden.
+In Randoop's 24K lines of code, we wrote
+98 \<@NonDet>,
+64 \<@OrderNonDet>,
+1083 \<@Det>,
+and 103 \<@PolyDet> annotations.
+
 \section{Research Contributions\label{sec:contributions}}
-This paper makes the following contributions:
+%This paper makes the following contributions:
 \begin{enumerate}
   \item We designed a type system for expressing determinism properties.
 
-  \item We implemented the analysis, as a pluggable type system for Java, in a
+  \item We implemented the analysis, as a pluggable type system for Java in a
     tool called \theDeterminismChecker.
 
-  \item In a case study, we ran our analysis on a 24 KLOC project that
-    developers had already spent weeks of testing and inspection effort to
-    make deterministic.  \TheDeterminismChecker
-    discovered 5 instances of nondeterminism that the developers had
+  \item In a case study, we ran our analysis on a 24 KLOC project.
+%  that
+%    developers had already spent weeks of testing and inspection effort to
+%    make deterministic.  
+    \TheDeterminismChecker
+    found 5 instances of nondeterminism that the developers had
     overlooked.
 \end{enumerate}
 

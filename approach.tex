@@ -20,24 +20,25 @@ The core of the determinism type system is the following type qualifiers:
 \end{itemize}
 \Cref{fig:determinism-hierarchy} shows the subtyping
 relationship among the qualifiers.
-
 Programmers can write these type qualifiers to specify their program's behavior.
 \<OrderNonDet> may only be written on collections and maps.
-A map is a dictionary or an associative array, such as a hash table.
-\OurTypeSystem largely treats a map as a collection of key--value pairs.
+%A map is a dictionary or an associative array, such as a hash table.
+%\OurTypeSystem largely treats a map as a collection of key--value pairs.
 Both collections and maps may be \<Det>, \<OrderNonDet>, or \<NonDet>.
 The basetypes of their elements can be specified independently of the collection basetypes.
 However, an element type qualifier must be a subtype of the collection type qualifier.
+\OurTypeSystem checks all the standard typing rules of an object-oriented programming language where the types have these additional type qualifiers. It performs dataflow analysis,
+type refinement and local type inference to precisely report specification violations.
 
 \subsubsection{Behavior of order-nondeterministic collections}\label{sec:ond-behavior}
-A collection of type \<OrderNonDet> has special properties, including the following.
+A collection of type \<OrderNonDet> has special properties and are enforced by additional typing rules in \ourTypeSystem.
 
 \begin{enumerate}
     \item
     The individual elements retrieved from it have type \<NonDet>.  This
     affects access, iteration, searching, etc.
     \item
-    Size-related operations return a deterministic result.  This also affects
+    Size-related operations return a deterministic result.  This affects
     queries of whether an iterator has more elements.
     \item
     If the collection is sorted, or its elements are placed in a collection

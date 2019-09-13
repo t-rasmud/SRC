@@ -11,20 +11,21 @@ when provided with the same input. This is a serious problem for software develo
   Nondeterminism makes it difficult to \textbf{compare} two runs of a
   program on different data, or to compare a run of a slightly modified
   program to an original program.  This hinders debugging and maintenance,
-  and prevents use of techniques such as Delta Debugging~\cite{Zeller1999,YuLCZ2012}.
+  and prevents use of techniques like Delta Debugging~\cite{Zeller1999,YuLCZ2012}.
 \end{itemize}
 
 Two well-known sources of nondeterminism are concurrency
 and coin-flipping
 (calls to a \<random> API\@).
-It may be surprising that nondeterminism is common even in sequential
+Nondeterminism is common even in sequential
 programs that do not flip coins.
 For example, a program that iterates over a hash table
 may produce different output on different runs.
-So may any program that uses default formatting, such as Java's
-\<Object.toString()>, which includes a memory address.
+%So may any program that uses default formatting, such as Java's
+%\<Object.toString()>, which includes a memory address.
 Other nondeterministic APIs include date-and-time functions and
-accessing system properties such as the file system or environment variables.
+accessing system properties.
+% such as the file system or environment variables.
 
 The high-level goal of our work is to provide programmers with a tool for
 specifying deterministic properties in a program and verifying them
@@ -34,6 +35,10 @@ We have created an analysis that detects nondeterminism or verifies its
 absence in sequential programs.
 Our analysis permits a programmer to specify which parts of their program
 are intentionally nondeterministic, and it verifies that the remainder is deterministic.
+If our analysis issues no warnings, then the program produces the same
+output when executed twice on the same inputs.  This guarantee is modulo
+the limitations of the
+analysis, notably concurrency, implicit control flow, and unanalyzed libraries.
 Our analysis works at compile time, giving a guarantee over every possible
 execution of the program, unlike unsound dynamic tools that attempt
 to discover when a program has exhibited nondeterministic behavior on a
@@ -61,9 +66,7 @@ In \<TypeVariable.java>:
 
 \caption{Fixes made by the Randoop developers in response to our bug report
   about improper use of a HashSet.  Lines starting with ``\<->'' were
- removed and those starting with ``\<+>'' were added.
- Our tool, \theDeterminismChecker, confirmed that 
-25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.}
+ removed and those starting with ``\<+>'' were added.}
 \label{fig:randoop-bug-hashset}
 \end{figure*}
 
