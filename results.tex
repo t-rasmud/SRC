@@ -41,7 +41,7 @@ of severe bugs follow:
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
     (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}). 
     \TheDeterminismChecker could detect this bug by assigning the type qualifier \<OrderNonDet>
-    to the newly created \<HashSet> (\<parameters>) on line 161. The function returns an \<ArrayList> which get the determinism type \<Det>. Creating a \<Det ArrayList> with 
+    to the newly created \<HashSet> (\<parameters>) on line 161. The function returns an \<ArrayList> which gets the determinism type \<Det>. Creating a \<Det ArrayList> with 
     \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
     
 %    \TheDeterminismChecker confirmed that 
