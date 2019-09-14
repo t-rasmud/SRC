@@ -1,7 +1,18 @@
 \section{Introduction\label{sec:introduction}}
 
 A nondeterministic program may produce different output on different runs
-when provided with the same input. This is a serious problem for software developers and users.
+when provided with the same input.
+For example, a program that iterates over a hash table
+may produce different output on different runs.
+%So may any program that uses default formatting, such as 
+Other sources of nondeterministic include
+% default formatting (Java's \<Object.toString()> includes a memory address),
+date-and-time functions,
+accessing system properties,
+concurrency,
+and \<random>.
+%
+Nondeterminism is a serious problem for software developers and users.
 \begin{itemize}
 \item
   Nondeterminism makes a program difficult to \textbf{test}, because test
@@ -14,40 +25,19 @@ when provided with the same input. This is a serious problem for software develo
   and prevents use of techniques like Delta Debugging~\cite{Zeller1999,YuLCZ2012}.
 \end{itemize}
 
-Two well-known sources of nondeterminism are concurrency
-and coin-flipping
-(calls to a \<random> API\@).
-Nondeterminism is common even in sequential
-programs that do not flip coins.
-For example, a program that iterates over a hash table
-may produce different output on different runs.
-%So may any program that uses default formatting, such as Java's
-%\<Object.toString()>, which includes a memory address.
-Other nondeterministic APIs include date-and-time functions and
-accessing system properties.
 % such as the file system or environment variables.
 
-The high-level goal of our work is to provide programmers with a tool for
-specifying deterministic properties in a program and verifying them
-statically.
+We have created a specification language that lets programmers specify
+determinism properties.
+Some parts of the program may be intentionally nondeterministic, so long
+as they do not lead to nondeterministic output observed by a user.  
 
-We have created an analysis that detects nondeterminism or verifies its
-absence in sequential programs.
-Our analysis permits a programmer to specify which parts of their program
-are intentionally nondeterministic, and it verifies that the remainder is deterministic.
+We have created a sound static analysis that verifies the program against the specification.
 If our analysis issues no warnings, then the program produces the same
 output when executed twice on the same inputs.  This guarantee is modulo
 the limitations of the
-analysis, notably concurrency, implicit control flow, and unanalyzed libraries.
-Our analysis works at compile time, giving a guarantee over every possible
-execution of the program, unlike unsound dynamic tools that attempt
-to discover when a program has exhibited nondeterministic behavior on a
-specific run.  
-Our analysis handles collections that will contain the same values, but
-possibly in a different order, on different runs.
-Our analysis permits calls to
-nondeterministic APIs, and only issues a warning if they are used in ways
-that may lead to nondeterministic output observed by a user.  Like any
+analysis, notably \todo{Remove this limitation?}concurrency, implicit control flow, and unanalyzed libraries.
+Like any
 sound analysis, it can issue false positive warnings.
 
 \begin{figure*}
@@ -74,4 +64,5 @@ In \<TypeVariable.java>:
 %  defect that \theDeterminismChecker found.}
 
 
-% LocalWords:  NonDex DeFlaker Det OrderNonDet NonDet
+% LocalWords:  NonDex DeFlaker Det OrderNonDet NonDet unanalyzed
+%%  LocalWords:  TypeVariable

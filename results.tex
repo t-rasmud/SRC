@@ -4,44 +4,85 @@ we applied it to the Randoop test
 generator~\cite{PachecoLEB2007}.
 Randoop is intended to be deterministic, when invoked on a deterministic
 program~\cite{randoop-manual}.\footnote{Users of Randoop can pass in a different seed in order to
-    obtain a different deterministic output.  
+    obtain a different deterministic output.\todo{Could cut this footnote
+      for space.}
 %    Randoop has command-line
 %    options that enable concurrency and timeouts, both of which can lead to
 %    nondeterministic behavior.
 }
-However, Randoop was not deterministic.  This caused the developers
-problems in 
-reproducing bugs reported by users, 
-reproducing test failures during development, and
-understanding the effect of changes to Randoop by comparing executions of two
-similar variants of Randoop.
+% However, Randoop was not deterministic.  This caused the developers
+% problems in 
+% reproducing bugs reported by users, 
+% reproducing test failures during development, and
+% understanding the effect of changes to Randoop by comparing executions of two
+% similar variants of Randoop.
+The developers had recently
+spent two weeks of full-time work to
+eliminate unintentional nondeterministic behavior, by repeatedly
+running Randoop with verbose logging enabled and
+looking for differences in logging output (personal communication, 2019).
 
-We first wrote specifications for libraries Randoop uses, such as the JDK,
+First, we wrote specifications for libraries Randoop uses, such as the JDK,
 JUnit, and plume-util.
-Then, we wrote type qualifiers in the Randoop source code to express its
+
+Second, we wrote type qualifiers in the Randoop source code to express its
 determinism specification.
-Finally, we ran
+
+Third, we ran
 \theDeterminismChecker.  Each warning indicated a mismatch between the
 specification and the implementation.  We addressed each warning by changing our
 specification, reporting a bug in Randoop, or suppressing a false positive warning.
+At the end of the process, Randoop's 24K lines of code contained
+98 \<@NonDet>,
+64 \<@OrderNonDet>,
+1083 \<@Det>,
+and 103 \<@PolyDet>\todo{The paper doesn't mention polymorphism.  Is the
+  breakdown of the different types of annotations interesting to readers?} annotations.
+% The other types were given default type qualifiers by \theDeterminismChecker.
+This is about 1 annotation per 17 lines of code,
+% Justification for the claim about generics:
+% There are about 1389 lines with uses of generics, according to the following:
+% (rg "<.*>" "everything" (substitute-in-file-name "$test/randoop/src/main/java/"))
+% (delete-matching-lines ": /?*\\(@Option\\|//\\|/?\\*\\|return \"\\|\"\\)" nil nil t)
+% (replace-regexp " [<>] " "")
+% (replace-regexp "[<>]=" "")
+% (replace-regexp "[-=][<>]" "")
+% (replace-sring "<init>" "")
+% (delete-non-matching-lines "[<>]" nil nil t)
+and is fewer than the uses
+of Java generic types in Randoop.
 
-\TheDeterminismChecker found \numRandoopBugs previously-unknown nondeterminism bugs in Randoop that the developers couldn't detect even after they
-spent two weeks of full-time work to
-eliminate unintentional nondeterministic behavior by repeatedly
-running Randoop with verbose logging enabled and
-looking for differences in logging output (personal communication, 2019).
-They accepted our bug reports and committed fixes to the repository. Examples
+\TheDeterminismChecker found \numRandoopBugs previously-unknown
+nondeterminism bugs in Randoop.
+The developers accepted our bug reports and committed fixes to the repository. 
+Examples
 of severe bugs follow:
 
 \begin{itemize}
     \item
-    \textbf{HashSet bug}: Suppose that in the code under test, a type variable's lower or upper
-    bound has a type parameter that the type variable itself does not have. Then Randoop is nondeterministic.
+    \textbf{HashSet bug}: In Randoop's input (called the ``code under test''),
+    if a type variable's lower or upper
+    bound has a type parameter that the type variable itself does not have,
+    then Randoop is nondeterministic.
     This situation does occur, even in Randoop's test suite.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
-    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}). 
-    \TheDeterminismChecker could detect this bug by assigning the type qualifier \<OrderNonDet>
-    to the newly created \<HashSet> (\<parameters>) on line 161. The function returns an \<ArrayList> which gets the determinism type \<Det>. Creating a \<Det ArrayList> with 
+    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}\todo{Remove
+      the figure and instead give examples of specified code.  Or, show
+      just the ``before'' version of the code \emph{with annotations},
+      which will demonstrate how Randoop issues warnings.}).
+    \TheDeterminismChecker could detect this bug by assigning\todo{A
+      type-checker does not assign a type} the type qualifier \<OrderNonDet>
+    to the newly created \<HashSet> (\<parameters>)
+    \todo{This sentence is impossible to follow.  Each of
+      the two sentences
+      vaguely describes some difference between two versions of code.
+      Don't do that.  (A writing rule is ``show, don't tell''.)  Instead,
+      show the actual annotated code, and explain the warning that
+      \theDeterminismChecker issues.}
+    on line 161. The function returns an \<ArrayList> which gets the
+    determinism type \<Det>.
+    \todo{The following sentence is also unclear.  Who is the actor?  What
+      is the code?  Show it rather than giving this hard-to-follow explanation.}Creating a \<Det ArrayList> with 
     \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
     
 %    \TheDeterminismChecker confirmed that 
@@ -58,12 +99,8 @@ of severe bugs follow:
 %    properties did not lead to nondeterministic behavior.
 \end{itemize}
 
-\TheDeterminismChecker adds default type qualifiers to any unannotated type reducing the programmer's annotation burden.
-In Randoop's 24K lines of code, we wrote
-98 \<@NonDet>,
-64 \<@OrderNonDet>,
-1083 \<@Det>,
-and 103 \<@PolyDet> annotations.
+
+
 
 \section{Research Contributions\label{sec:contributions}}
 %This paper makes the following contributions:
@@ -82,3 +119,5 @@ and 103 \<@PolyDet> annotations.
     overlooked.
 \end{enumerate}
 
+
+%%  LocalWords:  util NonDet OrderNonDet Det PolyDet c975a9f7 e3c56

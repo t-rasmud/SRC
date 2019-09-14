@@ -1,19 +1,28 @@
 \section{Background and Related Work\label{sec:related}}
-Other researchers have also recognized the importance of the problem of nondeterminism.
+% Other researchers have also recognized the importance of the problem of nondeterminism.
 Previous work has focused on unsound dynamic
 approaches that identify flaky test cases.
 NonDex~\cite{ShiGLM2016} uses a modified JVM that returns different results on different
 executions, for a few key JDK methods with loose specifications.  Running a
-test suite multiple times may reveal unwarranted dependence on those
-methods. While this approach produces precise results, it requires manual inspection
-and considerable debugging effort unlike the \TheDeterminismChecker.
+test suite multiple times might reveal unwarranted dependence on those
+methods.
+% While this approach produces precise results, it requires manual inspection
+% and considerable debugging effort unlike the \TheDeterminismChecker.
 %NonDex~\cite{ShiGLM2016} is a tool that manually\todo{This is confusing:  the
 %  tool can't manually identify.  Do you mean that the developers manually
 %  identified, then the tool uses those models?}
 %identifies 
 DeFlaker~\cite{BellLHEYM2018} looks at a range of commit versions
-of a code, and marks a test as flaky if it doesn't execute any modified code but still fails in the newer version. DeFlaker is agnostic
-to the code under test and can therefore report flakiness arising out of concurrency, which \theDeterminismChecker cannot. 
+of a code, and marks a test as flaky if it doesn't execute any modified
+code but still fails in the newer version.
+
+Our analysis works at compile time, giving a guarantee over every possible
+execution of the program, unlike unsound dynamic tools that attempt
+to discover when a program has exhibited nondeterministic behavior on a
+specific run.  
+
+% DeFlaker is agnostic
+% to the code under test and can therefore report flakiness arising out of concurrency, which \theDeterminismChecker cannot. 
 %These techniques
 %have been able to identify issues in real-world programs, some of which
 %have been fixed by the developers. 
@@ -22,3 +31,5 @@ to the code under test and can therefore report flakiness arising out of concurr
 %earlier in the software development lifecycle is beneficial to
 %developers, because they can avoid bugs associated with flaky tests---reducing
 %costs~\cite{briski2008minimizing}.
+
+%%  LocalWords:  NonDex DeFlaker
