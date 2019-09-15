@@ -3,13 +3,11 @@ To evaluate the usability of \theDeterminismChecker,
 we applied it to the Randoop test
 generator~\cite{PachecoLEB2007}.
 Randoop is intended to be deterministic, when invoked on a deterministic
-program~\cite{randoop-manual}.\footnote{Users of Randoop can pass in a different seed in order to
-    obtain a different deterministic output.\todo{Could cut this footnote
-      for space.}
-%    Randoop has command-line
-%    options that enable concurrency and timeouts, both of which can lead to
-%    nondeterministic behavior.
-}
+program~\cite{randoop-manual}.
+%\footnote{Users of Randoop can pass in a different seed in order to
+%    obtain a different deterministic output.\todo{Could cut this footnote
+%      for space.}
+%}
 The developers had recently
 spent two weeks of full-time work to
 eliminate unintentional nondeterministic behavior, by repeatedly
@@ -18,21 +16,19 @@ looking for differences in logging output (personal communication, 2019).
 
 First, we wrote specifications for libraries Randoop uses, such as the JDK,
 JUnit, and plume-util.
-
 Second, we wrote type qualifiers in the Randoop source code to express its
 determinism specification.
-
 Third, we ran
 \theDeterminismChecker.  Each warning indicated a mismatch between the
 specification and the implementation.  We addressed each warning by changing our
-specification, reporting a bug in Randoop, or suppressing a false positive warning.
-At the end of the process, Randoop's 24K lines of code contained
-98 \<@NonDet>,
-64 \<@OrderNonDet>,
-1083 \<@Det>,
-and 103 \<@PolyDet>\todo{The paper doesn't mention polymorphism.  Is the
-  breakdown of the different types of annotations interesting to readers?} annotations.
-% The other types were given default type qualifiers by \theDeterminismChecker.
+specification, reporting a bug, or suppressing a false positive warning.
+At the end of the process, Randoop's 24K lines of code contained 1348 annotations.
+%98 \<@NonDet>,
+%64 \<@OrderNonDet>,
+%1083 \<@Det>,
+%and 103 \<@PolyDet> annotations.
+%\todo{The paper doesn't mention polymorphism.  Is the
+%    breakdown of the different types of annotations interesting to readers?}
 This is about 1 annotation per 17 lines of code,
 % Justification for the claim about generics:
 % There are about 1389 lines with uses of generics, according to the following:
@@ -59,31 +55,46 @@ of severe bugs follow:
     bound has a type parameter that the type variable itself does not have,
     then Randoop is nondeterministic.
     This situation does occur, even in Randoop's test suite.
+    \cref{fig:randoop-bug-hashset} shows the function that causes this nondeterministic behavior.
+    We annotated the return type as \codeid{@Det List<Det TypeVariable>} (line 160) since the method \codeid{getTypeParameters()}
+    is expected to return deterministic results. The method creates a local \<HashSet>, \<parameters> 
+    which we annotated as \codeid{OrderNonDet Set<@Det TypeVariable>} (line 161). In the next 2 lines,
+    the method adds an element to the set \<parameters> and returns an \<ArrayList> created with the
+    contents of this set. Since the \<ArrayList> is created with an \<OrderNonDet> set as
+    its argument, the type of \<ArrayList> is \<OrderNonDet>. The return type of \<getTypeParameters> 
+    (\codeid{OrderNonDet List<@Det TypeVariable>}) is not a subtype of the specified return type 
+    (\codeid{Det List<@Det TypeVariable>}) causing \theDeterminismChecker to issue a warning.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
-    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}\todo{Remove
-      the figure and instead give examples of specified code.  Or, show
-      just the ``before'' version of the code \emph{with annotations},
-      which will demonstrate how Randoop issues warnings.}).
-    \TheDeterminismChecker could detect this bug by assigning\todo{A
-      type-checker does not assign a type} the type qualifier \<OrderNonDet>
-    to the newly created \<HashSet> (\<parameters>)
-    \todo{This sentence is impossible to follow.  Each of
-      the two sentences
-      vaguely describes some difference between two versions of code.
-      Don't do that.  (A writing rule is ``show, don't tell''.)  Instead,
-      show the actual annotated code, and explain the warning that
-      \theDeterminismChecker issues.}
-    on line 161. The function returns an \<ArrayList> which gets the
-    determinism type \<Det>.
-    \todo{The following sentence is also unclear.  Who is the actor?  What
-      is the code?  Show it rather than giving this hard-to-follow explanation.}Creating a \<Det ArrayList> with 
-    \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
+    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
+    
+    
+%    \todo{Remove
+%      the figure and instead give examples of specified code.  Or, show
+%      just the ``before'' version of the code \emph{with annotations},
+%      which will demonstrate how Randoop issues warnings.}.
+%    \TheDeterminismChecker could detect this bug by assigning the type qualifier \<OrderNonDet>
+%    to the newly created \<HashSet> (\<parameters>)
+%    \todo{A
+%      type-checker does not assign a type} 
+%    \todo{This sentence is impossible to follow.  Each of
+%      the two sentences
+%      vaguely describes some difference between two versions of code.
+%      Don't do that.  (A writing rule is ``show, don't tell''.)  Instead,
+%      show the actual annotated code, and explain the warning that
+%      \theDeterminismChecker issues.}
+%    on line 161. The function returns an \<ArrayList> which gets the
+%    determinism type \<Det>.
+%    \todo{The following sentence is also unclear.  Who is the actor?  What
+%      is the code?  Show it rather than giving this hard-to-follow explanation.}
+%  Creating a \<Det ArrayList> with 
+%    \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
     
     \item
     \textbf{Classpath bug}
     Randoop used the CLASSPATH environment variable in preference to the
     classpath passed on the command line.
-    This can cause incorrect behavior, both in Randoop's test suite and in the field,
+    This can cause incorrect behavior
+%    , both in Randoop's test suite and in the field,
     if a user sets the environment variable.
     The developers fixed the problem by changing Randoop to not read the environment variable
     (commit 330e3c56).
@@ -100,7 +111,6 @@ of severe bugs follow:
     tool called \theDeterminismChecker.
 
   \item In a case study, we ran our analysis on a 24 KLOC project.
-  
     \TheDeterminismChecker
     found 5 instances of nondeterminism that the developers had
     overlooked.

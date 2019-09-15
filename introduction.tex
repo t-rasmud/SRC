@@ -36,7 +36,9 @@ We have created a sound static analysis that verifies the program against the sp
 If our analysis issues no warnings, then the program produces the same
 output when executed twice on the same inputs.  This guarantee is modulo
 the limitations of the
-analysis, notably \todo{Remove this limitation?}concurrency, implicit control flow, and unanalyzed libraries.
+analysis, notably 
+%\todo{Remove this limitation?}
+concurrency, implicit control flow, and unanalyzed libraries.
 Like any
 sound analysis, it can issue false positive warnings.
 
@@ -46,17 +48,14 @@ sound analysis, it can issue false positive warnings.
 In \<TypeVariable.java>:
 
 \begin{Verbatim}
-160:   public List<TypeVariable> getTypeParameters() {
-161:-    Set<TypeVariable> parameters = new HashSet<>(super.getTypeParameters());
-161:+    Set<TypeVariable> parameters = new LinkedHashSet<>(super.getTypeParameters());
-162:     parameters.add(this);
-163:     return new ArrayList<>(parameters);
+160:   public @Det List<@Det TypeVariable> getTypeParameters() {
+161:      @OrderNonDet Set<@Det TypeVariable> parameters = new HashSet<>(super.getTypeParameters());
+162:      parameters.add(this);
+163:      return new ArrayList<>(parameters);
 164:   }
 \end{Verbatim}
 
-\caption{Fixes made by the Randoop developers in response to our bug report
-  about improper use of a HashSet.  Lines starting with ``\<->'' were
- removed and those starting with ``\<+>'' were added.}
+\caption{Randoop code that we annotated causing \theDeterminismChecker to discover a bug.}
 \label{fig:randoop-bug-hashset}
 \end{figure*}
 
