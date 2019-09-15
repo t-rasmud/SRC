@@ -1,11 +1,11 @@
 \section{Approach and Uniqueness\label{sec:approach}}
-\begin{figure}
-    \begin{center}
-        \includegraphics[scale=0.37]{detHierarchy}
-    \end{center}
-    \caption{Determinism type qualifier hierarchy}
-    \label{fig:determinism-hierarchy}
-\end{figure}
+%\begin{figure}
+%    \begin{center}
+%        \includegraphics[scale=0.37]{detHierarchy}
+%    \end{center}
+%    \caption{Determinism type qualifier hierarchy}
+%    \label{fig:determinism-hierarchy}
+%\end{figure}
 
 We solve the problem of detecting nondeterminism by introducing a type system
 that allows programmers to express nondeterminism properties in a program that can be checked
@@ -43,9 +43,27 @@ is the following type qualifiers:
     all executions; for a collection, iteration
     also yields the values in the same order.
 \end{itemize}
-\Cref{fig:determinism-hierarchy} shows the subtyping
-relationship among the qualifiers.
-Programmers can write these type qualifiers to specify their program's behavior.
+We define the subtyping relationship among the qualifiers as \codeid{Det <: OrderNonDet <: NonDet}.
+%\Cref{fig:determinism-hierarchy} shows the subtyping
+%relationship among the qualifiers.
+Programmers can write these type qualifiers to specify their program's behavior. 
+The following code is an example of a valid program that type checks. 
+\begin{Verbatim}
+void assignments(Det int d, NonDet int nd) {
+    Det int local = d;
+    nd = d;
+}
+\end{Verbatim}
+All the assignments in this program 
+satisfy the subtyping relationships. The following program, however, doesn't type check because the return
+type (\<NonDet>) is not a subtype of the specified return type (\<Det>).
+\begin{Verbatim}
+Det int getvalue() {
+    NonDet int value = new Random().nextInt();
+    // Error: return type incompatible
+    return value;
+}
+\end{Verbatim}
 
 Every expression in a program is classified as either \<NonDet>, \<OrderNonDet>, or  \<Det>.
 %\todo{Cut the following sentence, which uses jargon like ``basetype'' that
@@ -54,8 +72,8 @@ Every expression in a program is classified as either \<NonDet>, \<OrderNonDet>,
 %\todo{For the following sentence, show an example, or give the typing rule,
 %  or both.}
 However, an element type qualifier must be a subtype of the collection type qualifier.
-For instance, the type \codeid{OrderNonDet Set<@Det String>} is valid since \<Det> is a subtype of
-\<OrderNonDet>. The type \codeid{OrderNonDet Set<@NonDet String>} is invalid because the element type
+For instance, the type \codeid{OrderNonDet Set<Det String>} is valid since \<Det> is a subtype of
+\<OrderNonDet>. The type \codeid{OrderNonDet Set<NonDet String>} is invalid because the element type
 (\<NonDet>) is not a subtype of the collection type (\<OrderNonDet>).
 
 %\OurTypeSystem checks all the standard typing rules\todo{``all the standard
@@ -83,7 +101,7 @@ with examples below:
     The individual elements retrieved from it have type \<NonDet>.  This
     affects access, iteration, searching, etc.
     \begin{verbatim}
-@OrderNonDet HashSet<Det String> set; 
+OrderNonDet HashSet<Det String> set; 
 // The type of elem is NonDet String
 String elem = set.iterator().next();
     \end{verbatim}
@@ -92,7 +110,7 @@ String elem = set.iterator().next();
     Size-related operations return a deterministic result.  This affects
     queries of whether an iterator has more elements.
     \begin{verbatim}
-@OrderNonDet HashSet<Det String> set; 
+OrderNonDet HashSet<Det String> set; 
 // The type of elem is Det String
 String elem = set.size();
     \end{verbatim}
@@ -101,9 +119,9 @@ String elem = set.size();
     If the collection is sorted, or its elements are placed in a collection
     that does sorting, the result is deterministic.
     \begin{verbatim}
-@OrderNonDet ArrayList<Det String> lst; 
+OrderNonDet ArrayList<Det String> lst; 
 // The type of sortedList is 
-// @Det ArrayList<Det String>
+// Det ArrayList<Det String>
 ArrayList<Det String> sortedList = 
 lst.sort();
     \end{verbatim}

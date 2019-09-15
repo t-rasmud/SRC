@@ -56,14 +56,14 @@ of severe bugs follow:
     then Randoop is nondeterministic.
     This situation does occur, even in Randoop's test suite.
     \cref{fig:randoop-bug-hashset} shows the function that causes this nondeterministic behavior.
-    We annotated the return type as \codeid{@Det List<Det TypeVariable>} (line 160) since the method \codeid{getTypeParameters()}
+    We annotated the return type as \codeid{Det List<Det TypeVariable>} (line 160) since the method \codeid{getTypeParameters()}
     is expected to return deterministic results. The method creates a local \<HashSet>, \<parameters> 
-    which we annotated as \codeid{OrderNonDet Set<@Det TypeVariable>} (line 161). In the next 2 lines,
+    which we annotated as \codeid{OrderNonDet Set<Det TypeVariable>} (line 161). In the next 2 lines,
     the method adds an element to the set \<parameters> and returns an \<ArrayList> created with the
     contents of this set. Since the \<ArrayList> is created with an \<OrderNonDet> set as
     its argument, the type of \<ArrayList> is \<OrderNonDet>. The return type of \<getTypeParameters> 
-    (\codeid{OrderNonDet List<@Det TypeVariable>}) is not a subtype of the specified return type 
-    (\codeid{Det List<@Det TypeVariable>}) causing \theDeterminismChecker to issue a warning.
+    (\codeid{OrderNonDet List<Det TypeVariable>}) is not a subtype of the specified return type 
+    (\codeid{Det List<Det TypeVariable>}) causing \theDeterminismChecker to issue a warning.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
     (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
     

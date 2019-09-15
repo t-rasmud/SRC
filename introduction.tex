@@ -48,8 +48,8 @@ sound analysis, it can issue false positive warnings.
 In \<TypeVariable.java>:
 
 \begin{Verbatim}
-160:   public @Det List<@Det TypeVariable> getTypeParameters() {
-161:      @OrderNonDet Set<@Det TypeVariable> parameters = new HashSet<>(super.getTypeParameters());
+160:   public Det List<Det TypeVariable> getTypeParameters() {
+161:      OrderNonDet Set<Det TypeVariable> parameters = new HashSet<>(super.getTypeParameters());
 162:      parameters.add(this);
 163:      return new ArrayList<>(parameters);
 164:   }
@@ -57,6 +57,7 @@ In \<TypeVariable.java>:
 
 \caption{Randoop code that we annotated causing \theDeterminismChecker to discover a bug.}
 \label{fig:randoop-bug-hashset}
+\vspace{-0.4cm}
 \end{figure*}
 
 
