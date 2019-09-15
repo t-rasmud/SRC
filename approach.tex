@@ -73,7 +73,8 @@ For instance, the type \codeid{OrderNonDet Set<@Det String>} is valid since \<De
 %  then ask yourself if this point is important enough to include in the paper.}
 
 \subsubsection{Behavior of order-nondeterministic collections}\label{sec:ond-behavior}
-A collection of type \<OrderNonDet> has special properties that are enforced by additional typing rules in \ourTypeSystem.
+A collection of type \<OrderNonDet> has special properties. We elaborate on these properties
+with examples below:
 %\todo{Like other parts of the document (and as noted by the referees), this
 %  feels vague.  Make it more concrete, with examples or with specific explanation.}
 
@@ -81,7 +82,6 @@ A collection of type \<OrderNonDet> has special properties that are enforced by 
     \item
     The individual elements retrieved from it have type \<NonDet>.  This
     affects access, iteration, searching, etc.
-    Example: 
     \begin{verbatim}
 @OrderNonDet HashSet<Det String> set; 
 // The type of elem is NonDet String
