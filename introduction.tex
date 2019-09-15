@@ -5,12 +5,12 @@ when provided with the same input.
 For example, a program that iterates over a hash table
 may produce different output on different runs.
 %So may any program that uses default formatting, such as 
-Other sources of nondeterministic include
+Other sources of nondeterminism include
 % default formatting (Java's \<Object.toString()> includes a memory address),
 date-and-time functions,
 accessing system properties,
 concurrency,
-and \<random>.
+and calls to \<random> API.
 %
 Nondeterminism is a serious problem for software developers and users.
 \begin{itemize}
