@@ -10,12 +10,6 @@ program~\cite{randoop-manual}.\footnote{Users of Randoop can pass in a different
 %    options that enable concurrency and timeouts, both of which can lead to
 %    nondeterministic behavior.
 }
-% However, Randoop was not deterministic.  This caused the developers
-% problems in 
-% reproducing bugs reported by users, 
-% reproducing test failures during development, and
-% understanding the effect of changes to Randoop by comparing executions of two
-% similar variants of Randoop.
 The developers had recently
 spent two weeks of full-time work to
 eliminate unintentional nondeterministic behavior, by repeatedly
@@ -85,8 +79,6 @@ of severe bugs follow:
       is the code?  Show it rather than giving this hard-to-follow explanation.}Creating a \<Det ArrayList> with 
     \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
     
-%    \TheDeterminismChecker confirmed that 
-%    25 other uses of \<new HashSet> were acceptable, as were 15 uses of \<new HashMap>.
     \item
     \textbf{Classpath bug}
     Randoop used the CLASSPATH environment variable in preference to the
@@ -95,15 +87,12 @@ of severe bugs follow:
     if a user sets the environment variable.
     The developers fixed the problem by changing Randoop to not read the environment variable
     (commit 330e3c56).
-%    \TheDeterminismChecker verified that all other uses of system and Java
-%    properties did not lead to nondeterministic behavior.
 \end{itemize}
 
 
 
 
 \section{Research Contributions\label{sec:contributions}}
-%This paper makes the following contributions:
 \begin{enumerate}
   \item We designed a type system for expressing determinism properties.
 
@@ -111,9 +100,7 @@ of severe bugs follow:
     tool called \theDeterminismChecker.
 
   \item In a case study, we ran our analysis on a 24 KLOC project.
-%  that
-%    developers had already spent weeks of testing and inspection effort to
-%    make deterministic.  
+  
     \TheDeterminismChecker
     found 5 instances of nondeterminism that the developers had
     overlooked.
