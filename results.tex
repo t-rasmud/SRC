@@ -16,11 +16,16 @@ looking for differences in logging output.
 % (personal communication, 2019).
 
 First, we wrote specifications for libraries Randoop uses, such as the JDK,
-JUnit, and plume-util.
-\todo{Say more about this.  In particular, the specification for output
-  routines such as \<println> and \<printf> requires deterministic arguments.}
+JUnit, and plume-util. In particular, we annotated all the output routines to require deterministic
+arguments. For instance, we annotated the \<println> method of JDK as
+\codeid{public void println(@Det PrintStream this)}. If a method returned a hash value,
+we annotated its declared return type with the type qualifier \<NonDet> (Example: The return type of
+\<hashcode()> is \<NonDet int>). 
+%\todo{Say more about this.  In particular, the specification for output
+%  routines such as \<println> and \<printf> requires deterministic arguments.}
 Second, we wrote type qualifiers in the Randoop source code to express its
-determinism specification.\todo{Where did we get the determinism specification?}
+determinism specification after talking to the developers of Randoop. 
+%\todo{Where did we get the determinism specification?}
 Third, we ran
 \theDeterminismChecker.  Each warning indicated a mismatch between the
 specification and the implementation.  We addressed each warning by changing a
@@ -56,21 +61,23 @@ of bugs:
     bound has a type parameter that the type variable itself does not have,
     then Randoop is nondeterministic.
     This situation does occur, even in Randoop's test suite.
-    \Cref{fig:randoop-bug-hashset} shows the function that causes this nondeterministic behavior.
-    \todo{The next part of this paragraph is boring.  It just restates
-      exactly what is in the figure (but in a more verbose and less precise
-      way).  There is no point in doing that.
-      Instead, cut it or replace it by text that adds information.}
-    We annotated the return type as \codeid{Det List<Det TypeVariable>} (line 160) since the method \codeid{getTypeParameters()}
-    is expected to return deterministic results. The method creates a local \<HashSet>, \<parameters> 
-    which we annotated as \codeid{OrderNonDet Set<Det TypeVariable>} (line 161). In the next 2 lines,
-    the method adds an element to the set \<parameters> and returns an \<ArrayList> created with the
-    contents of this set. Since the \<ArrayList> is created with an \<OrderNonDet> set as
-    its argument, the type of \<ArrayList> is \<OrderNonDet>. The return type of \<getTypeParameters> 
-    (\codeid{OrderNonDet List<Det TypeVariable>}) is not a subtype of the specified return type 
-    (\codeid{Det List<Det TypeVariable>}) causing \theDeterminismChecker to issue a warning.
+    \Cref{fig:randoop-bug-hashset} shows the function that causes this nondeterministic behavior
+    along with the annotations we added.
+%    \todo{The next part of this paragraph is boring.  It just restates
+%      exactly what is in the figure (but in a more verbose and less precise
+%      way).  There is no point in doing that.
+%      Instead, cut it or replace it by text that adds information.}
+%    We annotated the return type as \codeid{Det List<Det TypeVariable>} (line 160) since the method \codeid{getTypeParameters()}
+%    is expected to return deterministic results. The method creates a local \<HashSet>, \<parameters> 
+%    which we annotated as \codeid{OrderNonDet Set<Det TypeVariable>} (line 161). In the next 2 lines,
+%    the method adds an element to the set \<parameters> and returns an \<ArrayList> created with the
+%    contents of this set. Since the \<ArrayList> is created with an \<OrderNonDet> set as
+%    its argument, the type of \<ArrayList> is \<OrderNonDet>. The return type of \<getTypeParameters> 
+%    (\codeid{OrderNonDet List<Det TypeVariable>}) is not a subtype of the specified return type 
+%    (\codeid{Det List<Det TypeVariable>}) causing \theDeterminismChecker to issue a warning.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
-    (commit c975a9f7, shown\todo{This is not shown.} in \cref{fig:randoop-bug-hashset}).
+    (commit c975a9f7).
+%     shown\todo{This is not shown.} in \cref{fig:randoop-bug-hashset}).
     
     
 %    \todo{Remove
@@ -97,13 +104,10 @@ of bugs:
     \textbf{Classpath bug}
     Randoop used the CLASSPATH environment variable in preference to the
     classpath passed on the command line.
-    This can cause incorrect behavior
-%    , both in Randoop's test suite and in the field,
+    This can cause incorrect behavior, both in Randoop's test suite and in the field,
     if a user sets the environment variable.
     The developers fixed the problem by changing Randoop to not read the environment variable
     (commit 330e3c56).
-
-
 
 
 \section{Research Contributions\label{sec:contributions}}
