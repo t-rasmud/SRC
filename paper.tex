@@ -53,11 +53,10 @@ A nondeterministic program is difficult to test and debug.
 Nondeterminism occurs even in sequential programs: for example, 
 iterating over the elements of a hash table can result in diverging test results.
 
-We have created a type system that can express determinism specifications
-in a program.
-The key ideas in the type system are type qualifiers for nondeterminism,
-order-nondeterminism, and determinism. While state-of-the-art
-nondeterminism detection tools unsoundly rely on observing runtime output, our approach
+We have created a type system that can express whether a computation is 
+deterministic, nondeterministic, or order-nondeterministic (like a \<set>).
+While state-of-the-art
+nondeterminism detection tools unsoundly rely on observing run-time output, our approach
 soundly verifies determinism at compile time.
 
 Our implementation found

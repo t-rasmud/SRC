@@ -10,7 +10,7 @@ Other sources of nondeterminism include
 date-and-time functions,
 accessing system properties,
 concurrency,
-and calls to \<random> API.
+and pseudo-random number generation.
 %
 Nondeterminism is a serious problem for software developers and users.
 \begin{itemize}
@@ -33,7 +33,7 @@ Some parts of the program may be intentionally nondeterministic, so long
 as they do not lead to nondeterministic output observed by a user.  
 
 We have created a sound static analysis that verifies the program against the specification.
-If our analysis issues no warnings, then the program produces the same
+If the analysis issues no warnings, then the program produces the same
 output when executed twice on the same inputs.  This guarantee is modulo
 the limitations of the
 analysis, notably 

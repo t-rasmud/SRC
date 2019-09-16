@@ -12,16 +12,19 @@ The developers had recently
 spent two weeks of full-time work to
 eliminate unintentional nondeterministic behavior, by repeatedly
 running Randoop with verbose logging enabled and
-looking for differences in logging output (personal communication, 2019).
+looking for differences in logging output.
+% (personal communication, 2019).
 
 First, we wrote specifications for libraries Randoop uses, such as the JDK,
 JUnit, and plume-util.
+\todo{Say more about this.  In particular, the specification for output
+  routines such as \<println> and \<printf> requires deterministic arguments.}
 Second, we wrote type qualifiers in the Randoop source code to express its
-determinism specification.
+determinism specification.\todo{Where did we get the determinism specification?}
 Third, we ran
 \theDeterminismChecker.  Each warning indicated a mismatch between the
-specification and the implementation.  We addressed each warning by changing our
-specification, reporting a bug, or suppressing a false positive warning.
+specification and the implementation.  We addressed each warning by changing a
+type qualifier, reporting a bug, or suppressing a false positive warning.
 At the end of the process, Randoop's 24K lines of code contained 1348 annotations.
 %98 \<@NonDet>,
 %64 \<@OrderNonDet>,
@@ -45,17 +48,19 @@ of Java generic types in Randoop.
 \TheDeterminismChecker found \numRandoopBugs previously-unknown
 nondeterminism bugs in Randoop.
 The developers accepted our bug reports and committed fixes to the repository. 
-Examples
-of severe bugs follow:
+Here are two examples
+of bugs:
 
-\begin{itemize}
-    \item
     \textbf{HashSet bug}: In Randoop's input (called the ``code under test''),
     if a type variable's lower or upper
     bound has a type parameter that the type variable itself does not have,
     then Randoop is nondeterministic.
     This situation does occur, even in Randoop's test suite.
-    \cref{fig:randoop-bug-hashset} shows the function that causes this nondeterministic behavior.
+    \Cref{fig:randoop-bug-hashset} shows the function that causes this nondeterministic behavior.
+    \todo{The next part of this paragraph is boring.  It just restates
+      exactly what is in the figure (but in a more verbose and less precise
+      way).  There is no point in doing that.
+      Instead, cut it or replace it by text that adds information.}
     We annotated the return type as \codeid{Det List<Det TypeVariable>} (line 160) since the method \codeid{getTypeParameters()}
     is expected to return deterministic results. The method creates a local \<HashSet>, \<parameters> 
     which we annotated as \codeid{OrderNonDet Set<Det TypeVariable>} (line 161). In the next 2 lines,
@@ -65,7 +70,7 @@ of severe bugs follow:
     (\codeid{OrderNonDet List<Det TypeVariable>}) is not a subtype of the specified return type 
     (\codeid{Det List<Det TypeVariable>}) causing \theDeterminismChecker to issue a warning.
     The developers fixed this by changing a \<HashSet> to \<LinkedHashSet>
-    (commit c975a9f7, shown in \cref{fig:randoop-bug-hashset}).
+    (commit c975a9f7, shown\todo{This is not shown.} in \cref{fig:randoop-bug-hashset}).
     
     
 %    \todo{Remove
@@ -89,7 +94,6 @@ of severe bugs follow:
 %  Creating a \<Det ArrayList> with 
 %    \<OrderNonDet> arguments violates the typing rules causing \theDeterminismChecker to report a bug.
     
-    \item
     \textbf{Classpath bug}
     Randoop used the CLASSPATH environment variable in preference to the
     classpath passed on the command line.
@@ -98,7 +102,6 @@ of severe bugs follow:
     if a user sets the environment variable.
     The developers fixed the problem by changing Randoop to not read the environment variable
     (commit 330e3c56).
-\end{itemize}
 
 
 
@@ -117,4 +120,5 @@ of severe bugs follow:
 \end{enumerate}
 
 
-%%  LocalWords:  util NonDet OrderNonDet Det PolyDet c975a9f7 e3c56
+%%  LocalWords:  util NonDet OrderNonDet Det PolyDet c975a9f7 e3c56 test''
+% LocalWords:  println TypeVariable getTypeParameters

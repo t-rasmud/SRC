@@ -1,4 +1,4 @@
-\section{Approach and Uniqueness\label{sec:approach}}
+\section{Types for Nondeterminism\label{sec:approach}}
 %\begin{figure}
 %    \begin{center}
 %        \includegraphics[scale=0.37]{detHierarchy}
@@ -7,9 +7,8 @@
 %    \label{fig:determinism-hierarchy}
 %\end{figure}
 
-We solve the problem of detecting nondeterminism by introducing a type system
-that allows programmers to express nondeterminism properties in a program that can be checked
-at compile time.
+We defined a type system
+that allows programmers to express (non)determinism properties.
 The most novel part of our analysis is how it handles collections that will
 contain the same values, but
 possibly in a different order, on different runs.
@@ -25,12 +24,14 @@ possibly in a different order, on different runs.
 %    the program is classified as one of the following categories.}
 
 A type abstracts or restricts the set of possible
-run-time values that an expression may evaluate to and the operations that may be performed.
+run-time values that an expression may evaluate to and the operations that
+may be performed on it.
 A programming language provides \emph{basetypes}, such as \<Int>.
 A \textit{type qualifier} on a basetype adds additional constraints;
 that is, it reduces the size of the set of values.
 An example type qualifier is \<Positive>, and a type (which combines a qualifier
 and a basetype) is \<Positive Int>.
+
 The core of the determinism type system
 is the following type qualifiers:
 \begin{itemize}
@@ -43,20 +44,40 @@ is the following type qualifiers:
     all executions; for a collection, iteration
     also yields the values in the same order.
 \end{itemize}
-We define the subtyping relationship among the qualifiers as \codeid{Det <: OrderNonDet <: NonDet}.
+% Every expression in a program is classified as either \<NonDet>, \<OrderNonDet>, or \<Det>.
+\todo{In a \LaTeX\ paper, use the standard mathematical symbols, not ASCII
+  approximations to them.}
+The subtyping relationship is \codeid{Det <: OrderNonDet <: NonDet}.
 %\Cref{fig:determinism-hierarchy} shows the subtyping
 %relationship among the qualifiers.
-Programmers can write these type qualifiers to specify their program's behavior. 
+% Programmers can write these type qualifiers to specify their program's behavior. 
 The following code is an example of a valid program that type checks. 
+\todo{This code is in poor style.  It assigns to a formal parameter, which
+  is unusual, it performs computation that is ignored (because its return
+  type is void).  Always make your examples as realistic as possible.  One
+  reason is that the code will be easier to read and less surprising or
+  distracting to readers.  Another reason is that if your code is
+  unrealistic, then readers will get the impression that your system is
+  impractical (because you couldn't think of a single real-world
+  application).  Make this code more realistic, or even use an example from
+  one of the libraries or programs.}
 \begin{Verbatim}
 void assignments(Det int d, NonDet int nd) {
     Det int local = d;
     nd = d;
 }
 \end{Verbatim}
+\todo{The use of ``type'' is confusing.  The paper improperly uses it for
+  qualifiers and return values.  Use the proper term.  When talking about a
+  type, use a type as you just defined it, not just a qualifier.}
 All the assignments in this program 
 satisfy the subtyping relationships. The following program, however, doesn't type check because the return
 type (\<NonDet>) is not a subtype of the specified return type (\<Det>).
+\todo{``The return type is not a subtype of the return type'' does not make
+  sense.  The first one is the type of the return value.  The second one is
+  the declared return type.  Also, as defined by the paper, \<Det> is not a
+  type.  The type should be \<Det int>.  Be careful about violating your
+  own definitions.}
 \begin{Verbatim}
 Det int getvalue() {
     NonDet int value = new Random().nextInt();
@@ -65,16 +86,17 @@ Det int getvalue() {
 }
 \end{Verbatim}
 
-Every expression in a program is classified as either \<NonDet>, \<OrderNonDet>, or  \<Det>.
 %\todo{Cut the following sentence, which uses jargon like ``basetype'' that
 %  has not been defined, and therefore is offputting and confusing to readers.}
 %The basetypes of their elements can be specified independently of the collection basetypes.
 %\todo{For the following sentence, show an example, or give the typing rule,
 %  or both.}
-However, an element type qualifier must be a subtype of the collection type qualifier.
-For instance, the type \codeid{OrderNonDet Set<Det String>} is valid since \<Det> is a subtype of
+An element type qualifier must be a subtype of the collection type qualifier.
+For instance, the type \codeid{OrderNonDet Set<Det String>} is valid since \<Det> is a subtype\todo{``subqualifier''?} of
 \<OrderNonDet>. The type \codeid{OrderNonDet Set<NonDet String>} is invalid because the element type
-(\<NonDet>) is not a subtype of the collection type (\<OrderNonDet>).
+(\<NonDet>)\todo{\<NonDet> is not a type, so it cannot be the element
+  type.} is not a subtype of the collection type (\<OrderNonDet>)\todo{Same
+  comment about types.}.
 
 %\OurTypeSystem checks all the standard typing rules\todo{``all the standard
 %  typing rules'' is too glib.  It denigrates the reader by implying that
@@ -100,6 +122,11 @@ with examples below:
     \item
     The individual elements retrieved from it have type \<NonDet>.  This
     affects access, iteration, searching, etc.
+\todo{The font size is different here than earlier in the paper.  Be
+  consistent.  Also, the comment is inconsistent with the code, which lacks
+  the qualifier.  The comment is irrelevant because you can just correct
+  the code.  The paper is assuming that all qualifiers are explicit.  Do
+  the same in the next two examples.}
     \begin{verbatim}
 OrderNonDet HashSet<Det String> set; 
 // The type of elem is NonDet String
@@ -129,3 +156,4 @@ lst.sort();
 \end{enumerate}
 
 %%  LocalWords:  NonDet OrderNonDet Det basetype offputting basetypes
+% LocalWords:  subqualifier
