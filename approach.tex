@@ -95,7 +95,7 @@ The call to \<getDeclaredMethods()> returns an array of type \codeid{Det Method 
 causing \theDeterminismChecker to issue a warning.
 Note that \<getDeclaredMethods()> is a method in the JDK that provides no guarantees on the order of
 the elements in the array that it returns and therefore we annotated its return type
-as an \<OrderNonDet> array.
+to be an \<OrderNonDet> array.
 %\todo{``The return type is not a subtype of the return type'' does not make
 %  sense.  The first one is the type of the return value.  The second one is
 %  the declared return type.  Also, as defined by the paper, \<Det> is not a
