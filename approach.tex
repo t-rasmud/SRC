@@ -63,10 +63,10 @@ The following code is an example of a valid program that type checks.
 %  one of the libraries or programs.}
 \begin{Verbatim}
 public class Accesses {
-    public @NonDet int field1;
-    public @NonDet int field2;
-        void setFields(@NonDet int arg1, 
-        @Det int arg2) {
+    public NonDet int field1;
+    public NonDet int field2;
+        void setFields(NonDet int arg1, 
+        Det int arg2) {
             field1 = arg1;
             field2 = arg2;
     }
@@ -83,7 +83,7 @@ The following method (From Junit~\cite{junit}), however, doesn't type check.
 public static Det Method Det[] getDeclaredMethods(
 Class<?> clazz) {
     // Error: assignment type incompatible
-    @Det Method @Det[] methods = 
+    Det Method Det[] methods = 
     clazz.getDeclaredMethods();
     ...
     // Error: return type incompatible

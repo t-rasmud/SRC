@@ -18,7 +18,7 @@ looking for differences in logging output.
 First, we wrote specifications for libraries Randoop uses, such as the JDK,
 JUnit, and plume-util. In particular, we annotated all the output routines to require deterministic
 arguments. For instance, we annotated the \<println> method of JDK as
-\codeid{public void println(@Det PrintStream this)}. If a method returned a hash value,
+\codeid{public void println(Det PrintStream this)}. If a method returned a hash value,
 we annotated its declared return type with the type qualifier \<NonDet> (Example: The return type of
 \<hashcode()> is \<NonDet int>). 
 %\todo{Say more about this.  In particular, the specification for output
